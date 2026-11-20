@@ -93,15 +93,16 @@ function ticketPromedio(ventas) {
 }
 
 function ventasPorCiudad(ventas, ciudad) {
-    const ciudadBuscada = normalizarCiudad(ciudad);
+    const ciudadBuscada = normalizarCiudad(ciudad); // 
     let acumulador = 0;
 
     for (const venta of ventas) {
-        if (normalizarCiudad(venta.ciudad) === ciudadBuscada) {
+        if (normalizarCiudad(venta.ciudad) === ciudadBuscada) { 
+         
             acumulador += valorVenta(venta);
         }
     }
 
     return acumulador;
 }
-console.log(ventasPorCiudad(ventas, "medellin"));
+console.log(ventasPorCiudad(ventas, "medellin")); 
