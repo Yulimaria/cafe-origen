@@ -105,4 +105,46 @@ function ventasPorCiudad(ventas, ciudad) {
 
     return acumulador;
 }
-console.log(ventasPorCiudad(ventas, "medellin")); 
+//console.log(ventasPorCiudad(ventas, "medellin")); 
+
+function totalVendidoM (ventas){
+    const acumuladorVenta = ventas.reduce((acm,item) => acm + (item.cantidad* item.precio),0);
+//aca lo que hice fue en una funcion flecha: primero declare una variable donde almacene la información
+// luego llamando el arreglocon .reduce declaramos el acumulador acm y el item que con lo que llamo cada atributo.
+// ya le estoy diciendo que acm donde inicia en 0 sume los datos de la multiplicacion
+//(acm, item) => ... es la función flecha que va dentro del .reduce().
+    return acumuladorVenta;
+}
+
+function unidadesVendidasM (ventas){
+    const sumatotal = ventas.reduce((acm, ventas) => acm + ventas.cantidad,0);
+    return sumatotal
+}
+//console.log(unidadesVendidasM(ventas));
+// se llama la funcion desde afuera 
+
+
+function ventasPorCiudadM(ventas, ciudad) {
+  const ciudadBuscada = normalizarCiudad(ciudad);
+  //aca lo que hiciste fue llamar la funcion de normalizarCiudad para reutilizarla
+
+  const filtro = ventas.filter(
+    (item) => normalizarCiudad(item.ciudad) === ciudadBuscada
+  );
+
+  return filtro.reduce(
+    (acumulador, item) => acumulador + valorVenta(item),
+    0
+  );
+}
+
+//console.log(ventasPorCiudadM(ventas, "medellin"));
+
+module.exports={
+  totalVendido,
+  totalVendidoM,
+  unidadesVendidas,
+  unidadesVendidasM,
+  ventasPorCiudad,
+  ventasPorCiudadM,
+}
