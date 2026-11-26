@@ -70,3 +70,23 @@ Trazas manuales comprobadas contra los resultados del programa:
 - **¿Qué transformo?** Primero sumo el valor por producto, luego ordeno de mayor a menor con `.sort((a, b) => b[1] - a[1])` sobre el arreglo nuevo (para no tocar `ventas`), y al final saco solo el nombre del producto con `.map(...)`.
 - **¿Qué acumulo?** El total en dinero de cada producto en un objeto antes de ordenar.
 - **¿Cómo agrupo?** Primero junto el dinero por producto en un objeto, lo paso a `Object.entries` para ordenarlo sin alterar `ventas`, recorto `k` elementos y dejo solo los nombres.
+
+# Bitácora — Café Origen (MiniReto 4)
+
+## Depuración de los casos reportados por la gerente — v0.1
+
+### Caso 1: Bogotá sale dos veces
+- **Síntoma:** En la versión que probó la gerente, Bogotá aparecía en dos grupos.
+- **Entrada que lo produce:** Una venta con `ciudad: "Bogotá"` y otra con `ciudad: " bogota "`.
+- **Hipótesis:** Pensé que se estaban usando los nombres tal como vienen escritos, así que las mayúsculas, la tilde o los espacios hacían que el programa los tomara como ciudades diferentes.
+- **Prueba realizada:** Agrupé esas dos ventas con `totalPorCiudad`. Revisé que el resultado tenga un solo grupo y que el total sume ambas ventas. En el reporte con los datos del proyecto también aparece una sola línea para Medellín, aunque está escrita como `"Medellín"` y `"medellín"`.
+- **Causa:** El agrupamiento necesita comparar una versión limpia del nombre, no el texto original.
+- **Corrección:** `totalPorCiudad` compara la ciudad en minúsculas, sin tildes y sin espacios sobrantes. Para mostrarla, conserva el primer nombre que encontró; por eso el grupo se ve como `Bogotá` y no como `bogota`.
+
+### Caso 2: el ticket promedio sale `NaN` en un día sin ventas
+- **Síntoma:** Al consultar un día vacío, el ticket promedio aparecía como `NaN`.
+- **Entrada que lo produce:** `ticketPromedio([])`. En el reporte uso el `2026-09-07`, que no tiene registros.
+- **Hipótesis:** Si se divide el total entre cero ventas, no hay un promedio que calcular y aparece `NaN`.
+- **Prueba realizada:** Probé `ticketPromedio([])` y devuelve `null`. Al ejecutar el reporte para el `2026-09-07`, muestra cero ventas, `$0` vendido y `No aplica (sin ventas válidas)` como ticket promedio.
+- **Causa:** No se estaba contemplando el caso en que el filtro no encuentra ventas.
+- **Corrección:** `ticketPromedio` devuelve `null` si no hay ventas válidas; el reporte revisa ese resultado y muestra un mensaje en vez de intentar formatearlo como dinero.

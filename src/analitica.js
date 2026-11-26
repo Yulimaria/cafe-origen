@@ -1,5 +1,3 @@
-const ventas = require("./datos");
-
 function normalizarCiudad(ciudad) {
     return String(ciudad)
         .trim()
@@ -176,10 +174,13 @@ const normalizarTexto = (texto) =>
 
 function totalPorCiudad(ventas) {
   const totales = {};
+  const nombresVisibles = {};
 
   for (const venta of ventas) {
     const ciudad = normalizarTexto(venta.ciudad);
-    totales[ciudad] = (totales[ciudad] || 0) + venta.cantidad * venta.precio;
+    const nombreVisible = nombresVisibles[ciudad] || String(venta.ciudad).trim();
+    nombresVisibles[ciudad] = nombreVisible;
+    totales[nombreVisible] = (totales[nombreVisible] || 0) + venta.cantidad * venta.precio;
   }
 
   return totales;
@@ -200,7 +201,6 @@ function unidadesPorProducto(ventas){
  return acm;
 }, {});
 }
-console.log(unidadesPorProducto(ventas));
 // 
 function topProductosPorValor(ventas, k){
     const valorPorProducto = ventas.reduce((acm, item)=>{
@@ -215,6 +215,9 @@ function topProductosPorValor(ventas, k){
     .map(([producto]) => producto);
 }
 
+function ventasDelDia(ventas, fecha) {
+    return ventas.filter(venta => venta.fecha === fecha);
+}
 
 //console.log(ventasPorCiudadM(ventas, "medellin"));
 
@@ -226,5 +229,8 @@ module.exports={
   ventasPorCiudad,
   ventasPorCiudadM,
   unidadesPorProducto,
+  totalPorCiudad,
+  ticketPromedio,
+  ventasDelDia,
  
 }
